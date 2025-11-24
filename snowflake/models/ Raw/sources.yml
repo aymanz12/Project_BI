@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: raw
+    database: BI_PROJECT_DB
+    schema: RAW
+    tables:
+      - name: DEMOGRAPHICS
+      - name: LOCATION
+      - name: POPULATION
+      - name: SERVICE
+      - name: STATUS
