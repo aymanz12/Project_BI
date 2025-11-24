@@ -1,135 +1,146 @@
-# 📊 End-to-End Analytics Pipeline: GitHub → Airbyte → Snowflake → dbt → Power BI
+📊 Modern Data Pipeline Project (Snowflake + dbt + Power BI)
 
-## 1. Overview
+This project demonstrates an **end-to-end data pipeline**:
 
-This project demonstrates a complete modern data engineering pipeline:
-
-- Extract data from **GitHub** using **Airbyte**
-- Land raw data in **Snowflake Bronze layer**
-- Clean and transform data using **dbt** (Silver & Gold layers)
-- Build dimensional models for analytics
-- Visualize insights using **Power BI**
-
-The goal is to move from raw operational data → to clean analytics-ready tables → to dashboards that support decision-making.
+- Extract data from **external sources** (GitHub) using **Airbyte**  
+- Load raw data into **Snowflake Bronze layer**  
+- Transform data with **dbt** (Silver & Gold layers)  
+- Build dimensional models (Star Schema)  
+- Visualize insights using **Power BI dashboards**  
 
 ---
 
-## 2. Project Architecture
+## 📁 Project Structure
 
-### 📥 Data Flow (GitHub → Airbyte → Snowflake → dbt → Power BI)
+project/
+├── assets/ # Store all images here
+│ ├── data_flow.png # Data pipeline flow diagram
+│ ├── data_modeling.png # Star schema / data modeling diagram
+│ ├── Dashboard1.png # Power BI dashboard screenshot
+│ ├── Dashboard2.png
+│ └── Dashboard3.png
+├── PowerBI/
+│ └── churn_analysis.pbix # Power BI dashboard file
+├── requirements.txt
+├── snowflake/
+│ ├── dbt_project.yml
+│ └── models/
+│ ├── Raw/
+│ ├── Silver/
+│ └── Gold/
+└── README.md
 
+
+> **Note:** All images referenced in this README are stored in the `assets/` folder. The actual Power BI dashboard file is in the `PowerBI/` folder.
+
+---
+
+## 1️⃣ Data Pipeline Flow
+
+### **📌 Overview**
 ![Data Flow](assets/data_flow.png)
 
-**Explanation:**
-1. Airbyte extracts data from GitHub  
-2. Data lands in the **Bronze** layer in Snowflake  
-3. dbt transforms it into **Silver** (clean data)  
-4. dbt generates **Gold** tables (dimensions + fact tables)  
-5. Power BI connects to the Gold layer for reporting  
+**Steps:**
+
+1. **Data ingestion:** Airbyte extracts data from GitHub and other sources  
+2. **Bronze layer:** Raw data is loaded into Snowflake  
+3. **Silver layer:** Cleaned and normalized data  
+4. **Gold layer:** Final fact & dimension tables for analytics  
+5. **Power BI:** Connect to Gold layer for dashboards  
 
 ---
 
-## 3. Data Modeling (dbt Star Schema)
+## 2️⃣ Data Ingestion with Airbyte
 
-### 🏗️ Star Schema Diagram
+Airbyte is used to move data from **sources** to **destinations**:
+
+- You **choose a source** (e.g., GitHub repository, API, CSV)  
+- You **choose a destination** (Snowflake Bronze layer in this project)  
+- Airbyte handles extraction, incremental updates, and loading  
+- dbt performs transformations and modeling in Silver and Gold layers  
+
+> Note: Airbyte configuration files are not included. Replace credentials with environment variables when setting up your own instance.
+
+---
+
+## 3️⃣ Data Modeling
+
+### **📌 Star Schema Diagram**
 ![Data Modeling](assets/data_modeling.png)
 
-The **Gold layer** contains the business-ready dimensional model:
-
-- **Fact table**: `fact_service`
-- **Dimensions**:  
-  - `dim_customer`  
-  - `dim_contract`  
-  - `dim_location`  
-  - `dim_population`  
-  - `dim_time`
-
-This schema enables efficient analytics and reporting.
+- **Fact table:** `fact_service`  
+- **Dimensions:** `dim_customer`, `dim_contract`, `dim_location`, `dim_population`, `dim_time`  
+- Designed for analytics and reporting in Power BI  
 
 ---
 
-## 4. dbt Project Structure
+## 4️⃣ dbt Project Structure
 
-snowflake/
-└── models/
+snowflake/models/
 ├── Raw/
 │ └── sources.yml
-├── silver/
+├── Silver/
 │ ├── demographics.sql
 │ ├── location.sql
 │ ├── population.sql
 │ ├── service.sql
 │ └── status.sql
-└── gold/
+└── Gold/
 ├── dim_customer.sql
 ├── dim_contract.sql
 ├── dim_location.sql
 ├── dim_population.sql
 ├── dim_time.sql
 ├── fact_service.sql
-└── schema.yml # tests for gold models
+└── schema.yml # tests
 
 
-### ✔ Raw layer  
-Contains external source definitions from Airbyte.
-
-### ✔ Silver layer  
-Applies cleaning, normalization, type casting, renaming, and basic joins.
-
-### ✔ Gold layer  
-Contains final analytics tables + tests (unique, not_null, relationships).
+- **Raw:** External source definitions  
+- **Silver:** Data cleaning, normalization, and type casting  
+- **Gold:** Analytics-ready tables with dbt tests  
 
 ---
 
-## 5. Power BI Dashboards
+## 5️⃣ Power BI Dashboards
 
-Below are the dashboards built using the **Gold** layer.
-
-### 📊 Dashboard 1
+### 📊 Dashboard 1  
 ![Dashboard 1](assets/Dashboard1.png)
 
-### 📊 Dashboard 2
+### 📊 Dashboard 2  
 ![Dashboard 2](assets/Dashboard2.png)
 
-### 📊 Dashboard 3
+### 📊 Dashboard 3  
 ![Dashboard 3](assets/Dashboard3.png)
 
----
-
-## 6. Tools & Technologies
-
-| Stage | Tool |
-|-------|------|
-| Data Extraction | Airbyte |
-| Data Storage | Snowflake |
-| Transformation | dbt |
-| Orchestration | (Optional) Airbyte Scheduler |
-| Visualization | Power BI |
-| Version Control | GitHub |
+**Power BI file:**  
+The interactive dashboard is available in `PowerBI/churn_analysis.pbix`.
 
 ---
 
-## 7. How to Run This Project
+## 6️⃣ Requirements
 
-### 1️⃣ Install dbt (Snowflake adapter)
+Install Python dependencies:
 
 ```bash
-pip install dbt-snowflake
+pip install -r requirements.txt
 
-2️⃣ Configure your Snowflake credentials
+7️⃣ How to Run the Project
 
-Use environment variables or a profiles.yml.
-3️⃣ Run dbt
+    Load raw data into Snowflake Bronze layer (via Airbyte or other ingestion method)
+
+    Navigate to your dbt project folder:
 
 dbt deps
 dbt seed
 dbt run
 dbt test
 
-8. Notes
+    Open the .pbix file in the PowerBI/ folder to explore dashboards
 
-    Airbyte configuration is not included in this repository for security reasons.
+8️⃣ Notes
 
-    Replace all secrets with environment variables.
+    Airbyte is used for data ingestion, but configuration files are not included
 
-    Images used in this README are stored in the assets/ folder.
+    Replace credentials with environment variables when setting up Snowflake
+
+    Store all images in the assets/ folder for README references
