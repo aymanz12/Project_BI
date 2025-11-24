@@ -1,0 +1,124 @@
+version: 2
+
+# ===================================
+# DIM_CUSTOMER
+# ===================================
+models:
+  - name: dim_customer
+    description: "Customer dimension with demographic details"
+    columns:
+      - name: customer_sk
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+      - name: age
+        tests:
+          - not_null
+      - name: number_of_dependents
+        tests:
+          - not_null
+
+# ===================================
+# DIM_LOCATION
+# ===================================
+  - name: dim_location
+    description: "Customer location dimension"
+    columns:
+      - name: location_sk
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+      - name: zip_code
+        tests:
+          - not_null
+
+# ===================================
+# DIM_POPULATION
+# ===================================
+  - name: dim_population
+    description: "Population dimension by ZIP code"
+    columns:
+      - name: population_sk
+        tests:
+          - unique
+          - not_null
+      - name: zip_code
+        tests:
+          - not_null
+
+# ===================================
+# DIM_CONTRACT
+# ===================================
+  - name: dim_contract
+    description: "Contract dimension for customers"
+    columns:
+      - name: contract_sk
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+      - name: quarter
+        tests:
+          - not_null
+
+# ===================================
+# DIM_TIME
+# ===================================
+  - name: dim_time
+    description: "Time dimension (quarters)"
+    columns:
+      - name: time_sk
+        tests:
+          - unique
+          - not_null
+      - name: quarter
+        tests:
+          - not_null
+
+# ===================================
+# FACT_SERVICE
+# ===================================
+  - name: fact_service
+    description: "Fact table with service metrics"
+    columns:
+      - name: customer_sk
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customer')
+              field: customer_sk
+      - name: time_sk
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_time')
+              field: time_sk
+      - name: location_sk
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_location')
+              field: location_sk
+      - name: contract_sk
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_contract')
+              field: contract_sk
+      - name: churn_score
+        tests:
+          - not_null
+      - name: churn_value
+        tests:
+          - not_null
+      - name: satisfaction_score
+        tests:
+          - not_null
