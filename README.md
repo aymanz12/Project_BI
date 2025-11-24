@@ -153,9 +153,6 @@ dbt test
 
 ---
 
-## 📫 Contact
-
-For questions or feedback, feel free to reach out!
 
 ---
 
